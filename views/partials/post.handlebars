@@ -1,0 +1,62 @@
+{{! Partial for a single post }}
+<div class="post">
+    <div class="post-avatar">
+        <!-- the user's avatar -->
+        <img src="{{avatar_url}}" alt="User Avatar">
+    </div>
+    <div class="post-content preserve-newlines">
+        <!-- the post -->
+        <div class="post-header">
+            <h3>{{title}}</h3>
+            <p>{{content}}</p>
+        </div>
+        <div class="post-status-bar">
+            <!-- everything that is shown in the status bar -->
+            <span class="post-author">{{username}}</span>
+            <span class="post-timestamp">{{timestamp}}</span>
+            <span class="post-likes">Likes: {{likes}}</span>
+            {{#ifCond username user.username}}
+                <button class="delete-button" data-id="{{id}}" onclick="handleDeleteClick(event)">
+                    <i class="fas fa-trash-alt"></i>
+                </button>
+            {{else}}
+                <button class="like-button" data-id="{{id}}" onclick="handleLikeClick(event)">
+                    ♥
+                </button>
+            {{/ifCond}}
+        </div>        
+    </div>
+</div>
+
+<script>
+    function handleLikeClick(event) {
+        const postId = event.target.getAttribute('data-id');
+        // Fetch request to like the post
+        fetch(`/like/${postId}`, {
+            method: 'POST',
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  // Update the like count
+                  const postElement = event.target.closest('.post');
+                  const likesElement = postElement.querySelector('.post-likes');
+                  likesElement.textContent = `Likes: ${data.likes}`;
+              }
+          });   
+    }
+
+    function handleDeleteClick(event) {
+        const postId = event.target.getAttribute('data-id');
+        // Fetch request to delete the post
+        fetch(`/delete/${postId}`, {
+            method: 'POST',
+        }).then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  // Remove the post
+                  let postElement = event.target.closest('.post');
+                  postElement.remove();
+              }
+          });
+    }    
+</script>

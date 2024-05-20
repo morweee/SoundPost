@@ -1,0 +1,258 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+header .logo h1 {
+    margin: 0;
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+header nav ul li {
+    margin-left: 20px;
+}
+
+header nav ul li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+}
+
+header .user-info {
+    display: flex;
+    align-items: center;
+}
+
+header .header-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+footer {
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+}
+
+/* Login and Register Styles */
+.login-register {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    margin-top: 20px;
+}
+
+.login-area, .register-area {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    width: 400px;
+}
+
+.login-area h2, .register-area h2 {
+    margin-top: 0;
+    text-align: center;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.form-group input {
+    width: 80%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    justify-content: center;
+}
+
+button:hover {
+    background-color: #555;
+}
+
+/* Main Content Styles */
+.content-container {
+    padding: 20px;
+}
+
+.post-form {
+    background-color: #fff;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post-form h2 {
+    margin-top: 0;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.emoji-button {
+    font-size: 24px;
+    cursor: pointer;
+    background: none;
+    border: none;
+}
+
+.post-button {
+    padding: 10px 20px;
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.post-button:hover {
+    background-color: #218838;
+}
+
+.emoji-panel {
+    margin-top: 10px;
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.emoji-panel input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+.emoji-grid {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.emoji-grid span {
+    font-size: 24px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+/* Post Styles */
+.posts-list {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.post {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+}
+
+.post:last-child {
+    border-bottom: none;
+}
+
+.post-avatar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.post-content {
+    flex-grow: 1;
+}
+
+.post-header h3 {
+    margin: 0 0 5px 0;
+}
+
+.post-header p {
+    margin: 0;
+    white-space: pre-wrap;
+}
+
+.post-status-bar {
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.post-author,
+.post-timestamp,
+.post-likes {
+    font-size: 14px;
+    color: #777;
+}
+
+.like-button,
+.delete-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #777;
+}
+
+.like-button:hover,
+.delete-button:hover {
+    color: #333;
+}
+
+.delete-button i {
+    font-size: 18px;
+}

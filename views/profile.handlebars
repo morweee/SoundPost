@@ -1,0 +1,38 @@
+{{! Use the main layout }}
+{{!< main }}
+
+<div class="profile-container">
+    <div class="profile-avatar">
+        <!-- Display user's avatar -->
+        <img src="{{user.avatar_url}}" alt="User Avatar">
+    </div>
+    
+    <section class="profile-info">
+        <!-- Display user profile info -->
+        <h2>{{user.username}}</h2>
+        <p>Member since: {{user.memberSince}}</p>
+    </section>
+</div>
+
+<section class="user-posts">
+    <!-- Display user's posts -->
+    <h2>Your {{postNeoType}}s</h2>
+    
+    {{#if userPosts.length}}
+        <ul>
+            {{#each userPosts}}
+                {{> post this}}
+            {{/each}}
+        </ul>
+    {{else}}
+        <p>You have not posted yet!</p>
+    {{/if}}
+</section>
+
+<script>
+    // Handlebars helper for formatting the date
+    Handlebars.registerHelper('formatDate', function(date) {
+        const options = { year: 'numeric', month: 'long', day: 'numeric' };
+        return new Date(date).toLocaleDateString('en-US', options);
+    });
+</script>
