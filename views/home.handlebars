@@ -68,17 +68,8 @@ function toggleEmojiPanel() {
     const container = document.getElementById('emoji-container');
     container.style.display = container.style.display === 'none' ? 'block' : 'none';
 
-
-    if(container.style.display === 'block' && allEmojis.length == 0){
-        // go "Fetch" you some emojis and show them off with displayEmojies
-        // Fetch emojis from a public API or local JSON file
-        fetch('https://emoji-api.com/')  // Replace with the actual path or API endpoint
-            .then(response => response.json())
-            .then(data => {
-                allEmojis = data;  // Assume data is an array of emoji objects
-                displayEmojis(allEmojis);
-            })
-            .catch(error => console.error('Error fetching emojis:', error));
+    if (container.style.display === 'block' && allEmojis.length === 0) {
+        fetchEmojis();
     }
 }
 
@@ -89,8 +80,10 @@ function displayEmojis(emojis,limit=200) {
         emojis.slice(0, limit).forEach(emoji => {
             const emojiElement = document.createElement('span');
             emojiElement.textContent = emoji.character;
-            emojiElement.title = emoji.slug;  // Showing the emoji name on hover
+            emojiElement.title = emoji.slug;
             emojiElement.style.cursor = 'pointer';
+            emojiElement.style.fontSize = '24px';
+            emojiElement.style.margin = '5px';
             emojiElement.onclick = () => insertEmoji(emoji.character);
             container.appendChild(emojiElement);
         });
@@ -99,12 +92,22 @@ function displayEmojis(emojis,limit=200) {
     }
 }
 
+function fetchEmojis() {
+    fetch('https://emoji-api.com/emojis?access_key=bd77a101b39f6d18d1c7d355f587284a18858a37')
+        .then(response => response.json())
+        .then(data => {
+            allEmojis = data;
+            displayEmojis(allEmojis);
+        })
+        .catch(error => console.error('Error fetching emojis:', error));
+}
+
 function searchEmojis() {
     const searchTerm = document.getElementById('emoji-search').value.toLowerCase();
     // array.filter takes a predicate
     // use string.includes. 
     const filteredEmojis = allEmojis.filter(emoji =>
-        emoji.slug.includes(searchTerm)
+        emoji.unicodeName.toLowerCase().includes(searchTerm)
     );
     displayEmojis(filteredEmojis);
 }
@@ -120,7 +123,6 @@ function insertEmoji(emoji) {
     textarea.value = text.slice(0, startPos) + emoji + text.slice(endPos);
     textarea.focus();  // Keep focus on the textarea
     textarea.selectionStart = textarea.selectionEnd = startPos + emoji.length;
+
 }
 </script>
-
-
