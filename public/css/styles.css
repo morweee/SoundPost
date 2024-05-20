@@ -81,6 +81,14 @@ footer {
     text-align: center;
 }
 
+#seperate-label {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 150px;
+    padding: 20px;
+}
+
 .form-group {
     margin-bottom: 15px;
 }

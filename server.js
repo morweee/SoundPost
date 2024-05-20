@@ -261,7 +261,6 @@ let posts = [
     }
 ];
 
-
 // Function to find a user by username
 function findUserByUsername(username) {
     // TODO: Return user object if found, otherwise return undefined
