@@ -169,8 +169,6 @@ app.post('/delete/:id', isAuthenticated, (req, res) => {
         if (post.username === getCurrentUser(req).username) {
             posts.splice(postIndex, 1);
             res.json({ success: true });
-        } else {
-            res.json({ success: false, message: 'You are not authorized to delete this post.' });
         }
     } else {
         res.json({ success: false, message: 'Post not found.' });
