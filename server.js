@@ -6,6 +6,7 @@ const { createCanvas } = require('canvas');
 const fs = require('fs');
 const path = require('path');
 const { log } = require('handlebars');
+require('dotenv').config();
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
@@ -98,11 +99,13 @@ app.use(express.json());                            // Parse JSON bodies (as sen
 // Home route: render home view with posts and user
 // We pass the posts and user variables into the home
 // template
-//
+dotenv.config();
+const accessToken = process.env.EMOJI_API_KEY;
+
 app.get('/', (req, res) => {
     const posts = getPosts();
     const user = getCurrentUser(req) || {};
-    res.render('home', { posts, user });
+    res.render('home', { posts, user, accessToken });
 });
 
 // Register GET route is used for error response from registration
@@ -228,7 +231,8 @@ let posts = [
         username: 'TravelGuru',
         timestamp: '5/2/2024, 08:30:18 PM',
         avatar_url: '/avatars/unknown.png',
-        likes: 0
+        likes: 0,
+        likedBy: []
     },
     {
         id: 2,
@@ -237,7 +241,8 @@ let posts = [
         username: 'FoodieFanatic',
         timestamp: '2024-05-02 09:45',
         avatar_url: '/avatars/unknown.png',
-        likes: 0
+        likes: 0,
+        likedBy: []
     },
     {
         id: 3,
@@ -246,7 +251,8 @@ let posts = [
         username: 'TechSage',
         timestamp: '2024-05-02 11:00',
         avatar_url: '/avatars/unknown.png',
-        likes: 0
+        likes: 0,
+        likedBy: []
     },
     {
         id: 4,
@@ -255,7 +261,8 @@ let posts = [
         username: 'EcoWarrior',
         timestamp: '2024-05-02 13:00',
         avatar_url: '/avatars/unknown.png',
-        likes: 0
+        likes: 0,
+        likedBy: []
     }
 ];
 
@@ -366,6 +373,7 @@ function renderProfile(req, res) {
 // Function to update post likes
 function updatePostLikes(req, res) {
     // TODO: Increment post likes if conditions are met
+    const userId = req.session.userId;
     const postId = req.params.id;
     const post = posts.find(p => p.id === parseInt(postId));
     if (post) {

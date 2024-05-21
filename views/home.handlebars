@@ -93,7 +93,9 @@ function displayEmojis(emojis,limit=200) {
 }
 
 function fetchEmojis() {
-    fetch('https://emoji-api.com/emojis?access_key=bd77a101b39f6d18d1c7d355f587284a18858a37')
+    const apiKey = `{{accessToken}}`;
+    const url = `https://emoji-api.com/emojis?access_key=${apiKey}`;
+    fetch(url)
         .then(response => response.json())
         .then(data => {
             allEmojis = data;
