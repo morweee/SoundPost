@@ -190,34 +190,21 @@ app.listen(PORT, () => {
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 // Example data for posts and users
+// Users object array
 let users = [
     {
         id: 1,
-        username: 'TravelGuru',
-        avatar_url: undefined,
-        password: 'password',
-        memberSince: '2024-05-01 10:00'
+        username: 'WanderlustJane',
+        avatar_url: '/avatars/w.png',
+        password: 'password123',
+        memberSince: '5/20/2024, 09:00:00 AM'
     },
     {
         id: 2,
-        username: 'FoodieFanatic',
-        avatar_url: undefined,
-        password: 'password',
-        memberSince: '2024-05-01 11:30'
-    },
-    {
-        id: 3,
-        username: 'TechSage',
-        avatar_url: undefined,
-        password: 'password',
-        memberSince: '2024-05-01 12:15'
-    },
-    {
-        id: 4,
-        username: 'EcoWarrior',
-        avatar_url: undefined,
-        password: 'password',
-        memberSince: '2024-05-01 13:45'
+        username: 'GlobetrotterTom',
+        avatar_url: '/avatars/g.png',
+        password: 'password456',
+        memberSince: '5/21/2024, 10:30:00 AM'
     }
 ];
 
@@ -225,41 +212,21 @@ let users = [
 let posts = [
     {
         id: 1,
-        title: 'Exploring Hidden Gems in Europe',
-        content: 'Just got back from an incredible trip through Europe. Visited some lesser-known spots that are truly breathtaking!',
-        username: 'TravelGuru',
-        timestamp: '5/2/2024, 08:30:18 PM',
-        avatar_url: '/avatars/unknown.png',
+        title: 'Discovering the Charm of Kyoto',
+        content: 'Kyoto is a city of timeless beauty. From its stunning temples to serene gardens, every corner is a visual delight. Don’t miss the enchanting Gion District!',
+        username: 'WanderlustJane',
+        timestamp: '5/22/2024, 11:00:00 AM',
+        avatar_url: '/avatars/w.png',
         likes: 0,
         likedBy: []
     },
     {
         id: 2,
-        title: 'The Ultimate Guide to Homemade Pasta',
-        content: 'Learned how to make pasta from scratch, and it’s easier than you think. Sharing my favorite recipes and tips.',
-        username: 'FoodieFanatic',
-        timestamp: '2024-05-02 09:45',
-        avatar_url: '/avatars/unknown.png',
-        likes: 0,
-        likedBy: []
-    },
-    {
-        id: 3,
-        title: 'Top 5 Gadgets to Watch Out for in 2024',
-        content: 'Tech enthusiasts, here’s my list of the top 5 gadgets to look out for in 2024. Let me know your thoughts!',
-        username: 'TechSage',
-        timestamp: '2024-05-02 11:00',
-        avatar_url: '/avatars/unknown.png',
-        likes: 0,
-        likedBy: []
-    },
-    {
-        id: 4,
-        title: 'Sustainable Living: Easy Swaps You Can Make Today',
-        content: 'Making the shift to sustainable living is simpler than it seems. Sharing some easy swaps to get you started.',
-        username: 'EcoWarrior',
-        timestamp: '2024-05-02 13:00',
-        avatar_url: '/avatars/unknown.png',
+        title: 'A Journey Through the Swiss Alps',
+        content: 'The Swiss Alps are a hiker’s paradise. The breathtaking vistas, picturesque villages, and pristine lakes make it an unforgettable experience. Remember to try the local fondue!',
+        username: 'GlobetrotterTom',
+        timestamp: '5/22/2024, 12:45:00 PM',
+        avatar_url: '/avatars/g.png',
         likes: 0,
         likedBy: []
     }

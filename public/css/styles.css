@@ -66,7 +66,7 @@ footer {
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    margin-top: 20px;
+    margin-top: 150px;
 }
 
 .login-area, .register-area {
@@ -83,11 +83,18 @@ footer {
     text-align: center;
 }
 
+.login-area button, .register-area button {
+    text-align: center;
+    display: block;
+    width: 25%; 
+    margin: 0 auto; 
+}
+
 #seperate-label {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 150px;
+    margin-top: 130px;
     padding: 20px;
 }
 
@@ -375,6 +382,25 @@ button:hover {
     .post-status-bar {
         flex-direction: column;
         align-items: flex-start;
+    }
+
+    .login-register {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    .login-area,
+    .register-area {
+        width: 65%;
+        margin: 10px 0;
+    }
+
+    #seperate-label {
+        flex-direction: column;
+        align-items: center;
+        margin-top: 10px;
     }
 
     .profile-container {
