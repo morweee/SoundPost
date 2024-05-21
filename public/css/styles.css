@@ -25,6 +25,7 @@ header nav ul {
     margin: 0;
     padding: 0;
     display: flex;
+    align-items: center;
 }
 
 header nav ul li {
@@ -40,6 +41,7 @@ header nav ul li a {
 header .user-info {
     display: flex;
     align-items: center;
+    padding: 15px 15px 15px 20px;
 }
 
 header .header-avatar {
@@ -98,12 +100,16 @@ footer {
     margin-bottom: 5px;
 }
 
-.form-group input {
+.form-group input, .form-group textarea {
     width: 80%;
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
     font-size: 14px;
+}
+
+textarea {
+    height: 100px;
 }
 
 button {
@@ -136,6 +142,10 @@ button:hover {
 
 .post-form h2 {
     margin-top: 0;
+}
+
+.form-group input#title {
+    width: 60%;
 }
 
 .form-actions {
@@ -204,7 +214,7 @@ button:hover {
 
 .post {
     border-bottom: 1px solid #eee;
-    padding: 10px 0;
+    padding: 20px 0;
     display: flex;
     align-items: center;
 }
@@ -231,6 +241,7 @@ button:hover {
 .post-header p {
     margin: 0;
     white-space: pre-wrap;
+    line-height: 1.5;
 }
 
 .post-status-bar {
@@ -238,6 +249,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 200px;
 }
 
 .post-author,
@@ -245,6 +257,7 @@ button:hover {
 .post-likes {
     font-size: 14px;
     color: #777;
+    margin-right: 10px;
 }
 
 .like-button,
@@ -254,6 +267,7 @@ button:hover {
     cursor: pointer;
     font-size: 16px;
     color: #777;
+    margin-left: auto;
 }
 
 .like-button:hover,
