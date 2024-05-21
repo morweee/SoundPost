@@ -99,7 +99,6 @@ app.use(express.json());                            // Parse JSON bodies (as sen
 // Home route: render home view with posts and user
 // We pass the posts and user variables into the home
 // template
-dotenv.config();
 const accessToken = process.env.EMOJI_API_KEY;
 
 app.get('/', (req, res) => {
