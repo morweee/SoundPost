@@ -45,6 +45,23 @@ async function showDatabaseContents() {
         console.log('Posts table does not exist.');
     }
 
+    // check if the post_likes table exists
+    const postLikesTableExists = await db.get(`SELECT name FROM sqlite_master WHERE type='table' AND name='post_likes';`);
+    if (postLikesTableExists) {
+        console.log('Post likes table exists.');
+        const postLikes = await db.all('SELECT * FROM post_likes');
+        if (postLikes.length > 0) {
+            console.log('Post likes:');
+            postLikes.forEach(postLike => {
+                console.log(postLike);
+            });
+        } else {
+            console.log('No post likes found.');
+        }
+    } else {
+        console.log('Post likes table does not exist.');
+    }
+
     await db.close();
 }
 

@@ -18,7 +18,8 @@ const PORT = 3000;
 require('dotenv').config();
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-// call the database initialization function before starting to listen for incoming requests
+// Establish a connection to the SQLite database when the server starts
+// Create an asynchronous function at the start of the server to connect to the SQLite database
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 const dbFileName = process.env.DB_FILE || 'test.db';
 let db;
@@ -206,11 +207,8 @@ app.post('/delete/:id', isAuthenticated, async (req, res) => {
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Server Activation
+// call the database initialization function before starting to listen for incoming requests
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-// app.listen(PORT, () => {
-//     console.log(`Server is running on http://localhost:${PORT}`);
-// });
 
 (async () => {
     try {
@@ -220,7 +218,7 @@ app.post('/delete/:id', isAuthenticated, async (req, res) => {
         });
     } catch (error) {
         console.error('Error initializing database:', error);
-        process.exit(1); // Exit the process with a failure code
+        process.exit(1);
     }
 })();
 
@@ -228,41 +226,20 @@ app.post('/delete/:id', isAuthenticated, async (req, res) => {
 // Support Functions and Variables
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-// Function to find a user by username
-function findUserByUsername(username) {
-    // TODO: Return user object if found, otherwise return undefined
-    if(users.find(user => user.username === username)){
-        return users.find(user => user.username === username);
-    }
-    else{
-        return undefined;
-    }
-}
-
-// Function to find a user by user ID
-function findUserById(userId) {
-    // TODO: Return user object if found, otherwise return undefined
-    if(users.find(user => user.id === userId)){
-        return users.find(user => user.id === userId);
-    }
-    else{ 
-        return undefined;
-    }
-}
-
 // Middleware to check if user is authenticated
 function isAuthenticated(req, res, next) {
     console.log(req.session.userId);
     if (req.session.userId) {
         next();
     } else {
+        res.json({ success: false, message: 'Not logged in' });
         res.redirect('/login');
     }
 }
 
 // Function to register a user
 async function registerUser(req, res) {
-    // TODO: Register a new user and redirect appropriately
+    // Register a new user and redirect appropriately
     const username = req.body.username;
     const password = req.body.password;
     const db = await getDB();
@@ -282,7 +259,7 @@ async function registerUser(req, res) {
 
 // Function to login a user
 async function loginUser(req, res) {
-    // TODO: Login a user and redirect appropriately
+    // Login a user and redirect appropriately
     const db = await getDB();
     const username = req.body.username;
     const password = req.body.password;
@@ -300,7 +277,7 @@ async function loginUser(req, res) {
 
 // Function to logout a user
 function logoutUser(req, res) {
-    // TODO: Destroy session and redirect appropriately
+    // Destroy session and redirect appropriately
     req.session.destroy(err => {
         if (err) {
             console.log("Error destroying session");
@@ -313,7 +290,7 @@ function logoutUser(req, res) {
 
 // Function to render the profile page
 async function renderProfile(req, res) {
-    // TODO: Fetch user posts and render the profile page
+    // Fetch user posts and render the profile page
     const db = await getDB();
     const user = await getCurrentUser(req);
     if (user) {
@@ -328,20 +305,32 @@ async function renderProfile(req, res) {
 
 // Function to update post likes
 async function updatePostLikes(req, res) {
-    // TODO: Increment post likes if conditions are met
+    // Increment post likes if conditions are met
+    // current user
     const userId = req.session.userId;
+    // the post that is being liked
     const postId = req.params.id;
     const db = await getDB();
 
+    if (!userId) {
+        return res.json({ success: false, message: 'Not logged in' });
+    }
+
     try {
-        const result = await db.run("UPDATE posts SET likes = likes + 1 WHERE id = ?", [postId]);
-        // check if any rows were updated
-        if (result.changes > 0) {
-            const updatedPost = await db.get('SELECT likes FROM posts WHERE id = ?', [postId]);
-            res.json({ success: true, likes: updatedPost.likes });
+        const likeExists = await db.get('SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?', [postId, userId]);
+
+        if (likeExists) {
+            // Unlike the post
+            await db.run('DELETE FROM post_likes WHERE post_id = ? AND user_id = ?', [postId, userId]);
+            await db.run('UPDATE posts SET likes = likes - 1 WHERE id = ?', [postId]);
         } else {
-            res.json({ success: false });
+            // Like the post
+            await db.run('INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)', [postId, userId]);
+            await db.run('UPDATE posts SET likes = likes + 1 WHERE id = ?', [postId]);
         }
+
+        const updatedPost = await db.get('SELECT likes FROM posts WHERE id = ?', [postId]);
+        res.json({ success: true, likes: updatedPost.likes, liked: !likeExists });
     } catch (error) {
         console.error('Error updating post likes:', error);
         res.json({ success: false });
@@ -371,11 +360,6 @@ async function getCurrentUser(req) {
     }
 }
 
-// Function to get all posts, sorted by latest first
-function getPosts() {
-    return posts.slice().reverse();
-}
-
 // Function to add a new post
 async function addPost(title, content, user) {
     // TODO: Create a new post object and add to posts array
@@ -388,7 +372,9 @@ async function addPost(title, content, user) {
     );
 }
 
-// Function to generate an image avatar
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+// functions to generate an avatar image
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function generateAvatar(letter, width = 100, height = 100) {
     // TODO: Generate an avatar image with a letter
     // Steps:
@@ -413,7 +399,7 @@ function generateAvatar(letter, width = 100, height = 100) {
     return canvas.toBuffer();
 }
 
-// Function to generate a random color
+// generate a random color for the background of the avatar
 function getRandomColor() {
     const letters = '0123456789ABCDEF';
     let color = '#';

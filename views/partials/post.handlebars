@@ -29,34 +29,32 @@
 </div>
 
 <script>
-    function handleLikeClick(event) {
+    async function handleLikeClick(event) {
         const postId = event.target.getAttribute('data-id');
-        // Fetch request to like the post
-        fetch(`/like/${postId}`, {
+        // Fetch request to like/unlike the post
+        const response = await fetch(`/like/${postId}`, {
             method: 'POST',
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  // Update the like count
-                  const postElement = event.target.closest('.post');
-                  const likesElement = postElement.querySelector('.post-likes');
-                  likesElement.textContent = `Likes: ${data.likes}`;
-              }
-          });   
+        });
+        const data = await response.json();
+        if (data.success) {
+            // Update the like count
+            const postElement = event.target.closest('.post');
+            const likesElement = postElement.querySelector('.post-likes');
+            likesElement.textContent = `Likes: ${data.likes}`;
+        }
     }
 
-    function handleDeleteClick(event) {
+    async function handleDeleteClick(event) {
         const postId = event.target.getAttribute('data-id');
         // Fetch request to delete the post
-        fetch(`/delete/${postId}`, {
+        const response = await fetch(`/delete/${postId}`, {
             method: 'POST',
-        }).then(response => response.json())
-          .then(data => {
-              if (data.success) {
-                  // Remove the post
-                  let postElement = event.target.closest('.post');
-                  postElement.remove();
-              }
-          });
+        });
+        const data = await response.json();
+        if (data.success) {
+            // Remove the post
+            let postElement = event.target.closest('.post');
+            postElement.remove();
+        }
     }    
 </script>
