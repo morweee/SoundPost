@@ -1,0 +1,73 @@
+const sqlite = require('sqlite');
+const sqlite3 = require('sqlite3');
+
+// Placeholder for the database file name
+const dbFileName = 'test.db';
+
+async function initializeDB() {
+    const db = await sqlite.open({ filename: dbFileName, driver: sqlite3.Database });
+
+    await db.exec(`
+        CREATE TABLE IF NOT EXISTS users (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            username TEXT NOT NULL UNIQUE,
+            hashedGoogleId TEXT NOT NULL UNIQUE,
+            avatar_url TEXT,
+            memberSince DATETIME NOT NULL
+        );
+
+        CREATE TABLE IF NOT EXISTS posts (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            title TEXT NOT NULL,
+            content TEXT NOT NULL,
+            username TEXT NOT NULL,
+            timestamp DATETIME NOT NULL,
+            likes INTEGER NOT NULL,
+            avatar_url TEXT NOT NULL
+        );
+    `);
+
+    // Sample data - Replace these arrays with your own data
+    const users = [
+        { username: 'WanderlustJane', hashedGoogleId: 'hashedGoogleId1', avatar_url: '/avatars/w.png', memberSince: '5/20/2024, 09:00:00 AM' },
+        { username: 'GlobetrotterTom', hashedGoogleId: 'hashedGoogleId2', avatar_url: '/avatars/g.png', memberSince: '5/21/2024, 10:30:00 AM' }
+    ];
+
+    const posts = [
+        { title: 'Discovering the Charm of Kyoto', 
+        content: 'Kyoto is a city of timeless beauty. From its stunning temples to serene gardens, every corner is a visual delight. Don’t miss the enchanting Gion District!', 
+        username: 'WanderlustJane', 
+        timestamp: '5/22/2024, 11:00:00 AM', 
+        avatar_url: '/avatars/w.png',
+        likes: 0 },
+
+        { title: 'A Journey Through the Swiss Alps', 
+        content: 'The Swiss Alps are a hiker’s paradise. The breathtaking vistas, picturesque villages, and pristine lakes make it an unforgettable experience. Remember to try the local fondue!', 
+        username: 'GlobetrotterTom', 
+        timestamp: '5/23/2024, 12:30:00 PM',
+        avatar_url: '/avatars/g.png',
+        likes: 0 }
+    ];
+
+    // Insert sample data into the database
+    await Promise.all(users.map(user => {
+        return db.run(
+            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
+            [user.username, user.hashedGoogleId, user.avatar_url, user.memberSince]
+        );
+    }));
+
+    await Promise.all(posts.map(post => {
+        return db.run(
+            'INSERT INTO posts (title, content, username, timestamp, likes, avatar_url) VALUES (?, ?, ?, ?, ?, ?)',
+            [post.title, post.content, post.username, post.timestamp, post.likes, post.avatar_url]
+        );
+    }));
+
+    console.log('Database populated with initial data.');
+    await db.close();
+}
+
+initializeDB().catch(err => {
+    console.error('Error initializing database:', err);
+});
