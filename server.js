@@ -15,6 +15,7 @@ const sqlite3 = require('sqlite3');
 const passport = require('passport');
 const { google } = require('googleapis');
 const { OAuth2Client } = require('google-auth-library');
+const bcrypt = require('bcryptjs');
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
@@ -160,7 +161,8 @@ app.get('/auth/google/callback', async (req, res) => {
     });
 
     const userinfo = await oauth2.userinfo.get();
-    const hashedGoogleId = userinfo.data.id;
+    const googleId = userinfo.data.id;
+    const hashedGoogleId = await bcrypt.hash(googleId, 10);
     const db = await getDB();
 
     // check if user exists in the database
