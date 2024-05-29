@@ -35,6 +35,16 @@
         </section>
     {{/if}}
 
+    {{!--  a dropdown menu at the top of the posts list on the home page, 
+           to sort posts by either the number of likes or recency --}}
+    <section class="sort-posts">
+        <label for="sort">Sort by:</label>
+        <select id="sort" onchange="location = this.value;">
+            <option value="/?sort=recent" {{#if sortRecent}}selected{{/if}}>Most Recent</option>
+            <option value="/?sort=likes" {{#if sortLikes}}selected{{/if}}>Most Likes</option>
+        </select>
+    </section>
+
     <section class="posts-list">
         <!-- recent posts -->
         {{#if posts.length}}

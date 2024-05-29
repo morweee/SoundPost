@@ -195,9 +195,18 @@ app.get('/googleLogout', (req, res) => {
 
 app.get('/', async (req, res) => {
     const db = await getDB();
-    const posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC')
     const user = await getCurrentUser(req) || {};
-    res.render('home', { posts, user, accessToken });
+    // default: render posts ordered by timestamp
+    let posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC')
+    const sortOption = req.query.sort;
+
+    // sort posts by likes if the sort query parameter is set to 'likes'
+    if (sortOption === 'likes') {
+        posts = await db.all('SELECT * FROM posts ORDER BY likes DESC');
+    } else {
+        posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
+    }
+    res.render('home', { posts, user, accessToken, sortRecent: sortOption === 'recent', sortLikes: sortOption === 'likes' });
 });
 
 // Username Registration Route

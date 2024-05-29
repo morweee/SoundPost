@@ -205,6 +205,40 @@ button:hover {
     background-color: #555;
 }
 
+/* styles for the Sort Posts (dropdown menu) */
+.sort-posts {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-right: 20px;
+}
+
+.sort-posts label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.sort-posts select {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #f8f8f8;
+    color: #333;
+    cursor: pointer;
+}
+
+.sort-posts select:hover {
+    background-color: #e6e6e6;
+}
+
+.sort-posts select:focus {
+    outline: none;
+    border-color: #999;
+    background-color: #fff;
+}
+
 /* Main Content Styles */
 .content-container {
     padding: 20px;
@@ -327,7 +361,7 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 200px;
+    gap: 20px;
 }
 
 .post-author,
@@ -338,6 +372,12 @@ button:hover {
     margin-right: 10px;
 }
 
+.post-likes {
+    display: flex;
+    align-items: center;
+    margin-right: 5px;
+}
+
 .like-button,
 .delete-button {
     background: none;
@@ -345,7 +385,7 @@ button:hover {
     cursor: pointer;
     font-size: 16px;
     color: #777;
-    margin-left: auto;
+    margin-left: 0;
 }
 
 .like-button:hover,
