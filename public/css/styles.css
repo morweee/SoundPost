@@ -61,43 +61,114 @@ footer {
     bottom: 0;
 }
 
-/* Login and Register Styles */
-.login-register {
+/* Styling for the login page */
+.login-container {
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    margin-top: 150px;
-}
-
-.login-area, .register-area {
-    background-color: #fff;
-    padding: 20px;
-    border-radius: 5px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    margin: 10px;
-    width: 400px;
-}
-
-.login-area h2, .register-area h2 {
-    margin-top: 0;
-    text-align: center;
-}
-
-.login-area button, .register-area button {
-    text-align: center;
-    display: block;
-    width: 25%; 
-    margin: 0 auto; 
-}
-
-#seperate-label {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin-top: 130px;
-    padding: 20px;
+    height: 80vh;
+    background-color: #f4f4f4;
 }
 
+.login-box {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    width: 300px;
+    text-align: center;
+}
+
+.login-box h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.login-box button {
+    padding: 10px 20px;
+    background-color: #4285f4;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.login-box button:hover {
+    background-color: #357ae8;
+}
+
+.login-box .google-icon {
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+
+/* Styling for the registerUsername page */
+.register-username-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 80vh; /* Adjusts the height to center the form vertically */
+    background-color: #f4f4f4;
+}
+
+.register-username-area {
+    background-color: #fff;
+    padding: 40px;
+    border-radius: 5px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 400px;
+    text-align: center;
+}
+
+.register-username-area form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.register-username-area label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+    color: #333;
+}
+
+.register-username-area input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+.register-username-area button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+}
+
+.register-username-area button:hover {
+    background-color: #0056b3;
+}
+
+.register-username-area p {
+    color: red;
+    margin-top: 10px;
+}
+
+/* form styles */
 .form-group {
     margin-bottom: 15px;
 }
@@ -340,6 +411,44 @@ button:hover {
 .user-posts li:last-child {
     border-bottom: none;
 }
+
+/* Styling for the logout confirmation page */
+.logout-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 80vh;
+    background-color: #f4f4f4;
+    text-align: center;
+}
+
+.logout-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.logout-container p {
+    margin-bottom: 20px;
+    font-size: 18px;
+    color: #555;
+}
+
+.logout-container .login-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.logout-container .login-button:hover {
+    background-color: #0056b3;
+}
+
 
 /* Responsive Design */
 @media (max-width: 768px) {

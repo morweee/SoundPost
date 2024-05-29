@@ -8,6 +8,11 @@ const path = require('path');
 const { log } = require('handlebars');
 const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
+const passport = require('passport');
+const { google } = require('googleapis');
+const { OAuth2Client } = require('google-auth-library');
+
+const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
@@ -17,11 +22,19 @@ const app = express();
 const PORT = 3000;
 require('dotenv').config();
 
+// Use environment variables for emoji API Key, client ID, and secret
+const accessToken = process.env.EMOJI_API_KEY;
+const CLIENT_ID = process.env.CLIENT_ID;
+const CLIENT_SECRET = process.env.CLIENT_SECRET;
+
+const REDIRECT_URI = 'http://localhost:3000/auth/google/callback';
+const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Establish a connection to the SQLite database when the server starts
 // Create an asynchronous function at the start of the server to connect to the SQLite database
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-const dbFileName = process.env.DB_FILE || 'test.db';
+const dbFileName = process.env.DB_FILE || 'database.db';
 let db;
 
 async function initializeDB() {
@@ -59,6 +72,7 @@ async function getDB() {
             {{else}}
                 <!-- Content if value1 does not equal value2 -->
             {{/ifCond}}
+
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
 
@@ -113,14 +127,63 @@ app.use(express.static('public'));                  // Serve static files
 app.use(express.urlencoded({ extended: true }));    // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.json());                            // Parse JSON bodies (as sent by API clients)
 
+// Initialize Passport and restore authentication state, if any, from the session
+app.use(passport.initialize());
+app.use(passport.session());
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Routes
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+// Routes for Google OAuth
+// Redirect to Google's OAuth 2.0 server
+app.get('/auth/google', (req, res) => {
+    const url = client.generateAuthUrl({
+        access_type: 'offline',
+        scope: ['https://www.googleapis.com/auth/userinfo.email', 'https://www.googleapis.com/auth/userinfo.profile'],
+    });
+    res.redirect(url);
+});
+
+// Handle OAuth 2.0 server response
+app.get('/auth/google/callback', async (req, res) => {
+    const { code } = req.query;
+    const { tokens } = await client.getToken(code);
+    client.setCredentials(tokens);
+
+    const oauth2 = google.oauth2({
+        auth: client,
+        version: 'v2',
+    });
+
+    const userinfo = await oauth2.userinfo.get();
+    const hashedGoogleId = userinfo.data.id;
+    const db = await getDB();
+
+    // check if user exists in the database
+    let user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
+
+    if (user) {
+        // User exists: set session and redirect to home
+        req.session.userId = user.id;
+        req.session.loggedIn = true;
+        res.redirect('/');
+    } else {
+        // user does not exist: store hashed Google ID in session and redirect to username registration
+        req.session.hashedGoogleId = hashedGoogleId;
+        req.session.tokens = tokens;
+        res.redirect('/registerUsername');
+    }
+});
+
+// Logout Confirmation Route
+app.get('/googleLogout', (req, res) => {
+    res.render('googleLogout');
+});
+
 // Home route: render home view with posts and user
 // We pass the posts and user variables into the home
 // template
-const accessToken = process.env.EMOJI_API_KEY;
 
 app.get('/', async (req, res) => {
     const db = await getDB();
@@ -129,14 +192,12 @@ app.get('/', async (req, res) => {
     res.render('home', { posts, user, accessToken });
 });
 
-// Register GET route is used for error response from registration
-//
-app.get('/register', (req, res) => {
-    res.render('loginRegister', { regError: req.query.error });
+// Username Registration Route
+app.get('/registerUsername', (req, res) => {
+    res.render('registerUsername', { error: req.query.error });
 });
 
 // Login route GET route is used for error response from login
-//
 app.get('/login', (req, res) => {
     res.render('loginRegister', { loginError: req.query.error });
 });
@@ -148,6 +209,7 @@ app.get('/error', (req, res) => {
 });
 
 // Additional routes that you must implement
+// POST routes
 
 app.post('/posts', async (req, res) => {
     // TODO: Add a new post and redirect to home
@@ -175,17 +237,14 @@ app.get('/avatar/:username', (req, res) => {
     // TODO: Serve the avatar image for the user
     handleAvatar(req, res);
 });
-app.post('/register', async (req, res) => {
-    // TODO: Register a new user
-    await registerUser(req, res);
-});
-app.post('/login', async (req, res) => {
-    // TODO: Login a user
-    await loginUser(req, res);
 
+// Register and login routes with Google OAuth
+app.post('/registerUsername', async (req, res) => {
+    await registerUsername(req, res);
 });
+
 app.get('/logout', (req, res) => {
-    // TODO: Logout the user
+    // Logout the user
     logoutUser(req, res);
 });
 
@@ -237,6 +296,31 @@ function isAuthenticated(req, res, next) {
     }
 }
 
+async function registerUsername(req, res) {
+    const db = await getDB();
+    const username = req.body.username;
+    const hashedGoogleId = req.session.hashedGoogleId;
+
+    try {
+        // check if the username already exists
+        const existingUser = await db.get('SELECT * FROM users WHERE username = ?', [username]);
+        if (existingUser) {
+            return res.render('registerUsername', { error: 'Username already exists' });
+        }
+        const avatar_path = saveAvatar(username);
+        await db.run(
+            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
+            [username, hashedGoogleId, avatar_path, new Date().toISOString()]
+        );
+        const user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
+        req.session.userId = user.id;
+        req.session.loggedIn = true;
+        res.redirect('/');
+    } catch (error) {
+        res.render('registerUsername', { error: 'An error occurred during registration' });
+    }
+}
+
 // Function to register a user
 async function registerUser(req, res) {
     // Register a new user and redirect appropriately
@@ -283,7 +367,8 @@ function logoutUser(req, res) {
             console.log("Error destroying session");
             res.redirect('/error');
         } else {
-            res.redirect('/');
+            // Redirect to the Google logout page
+            res.redirect('/googleLogout');
         }
     });
 }
@@ -317,14 +402,14 @@ async function updatePostLikes(req, res) {
     }
 
     try {
+        // check if the user has already liked the post
         const likeExists = await db.get('SELECT * FROM post_likes WHERE post_id = ? AND user_id = ?', [postId, userId]);
-
         if (likeExists) {
-            // Unlike the post
+            // The user has already liked the post - unlike the post
             await db.run('DELETE FROM post_likes WHERE post_id = ? AND user_id = ?', [postId, userId]);
             await db.run('UPDATE posts SET likes = likes - 1 WHERE id = ?', [postId]);
         } else {
-            // Like the post
+            // The user has not liked the post - like the post
             await db.run('INSERT INTO post_likes (post_id, user_id) VALUES (?, ?)', [postId, userId]);
             await db.run('UPDATE posts SET likes = likes + 1 WHERE id = ?', [postId]);
         }
