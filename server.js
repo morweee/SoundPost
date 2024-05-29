@@ -6,13 +6,15 @@ const { createCanvas } = require('canvas');
 const fs = require('fs');
 const path = require('path');
 const { log } = require('handlebars');
+
+// SQLite database
 const sqlite = require('sqlite');
 const sqlite3 = require('sqlite3');
+
+// google oauth
 const passport = require('passport');
 const { google } = require('googleapis');
 const { OAuth2Client } = require('google-auth-library');
-
-const GoogleStrategy = require('passport-google-oauth20').Strategy;
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
@@ -27,6 +29,7 @@ const accessToken = process.env.EMOJI_API_KEY;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
 
+// Create Google OAuth 2.0 client and redirect URI
 const REDIRECT_URI = 'http://localhost:3000/auth/google/callback';
 const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 
@@ -34,7 +37,7 @@ const client = new OAuth2Client(CLIENT_ID, CLIENT_SECRET, REDIRECT_URI);
 // Establish a connection to the SQLite database when the server starts
 // Create an asynchronous function at the start of the server to connect to the SQLite database
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-const dbFileName = process.env.DB_FILE || 'database.db';
+const dbFileName = 'database.db';
 let db;
 
 async function initializeDB() {
@@ -176,6 +179,11 @@ app.get('/auth/google/callback', async (req, res) => {
     }
 });
 
+// route to handle the logout callback
+app.get('/logoutCallback', (req, res) => {
+    res.render('googleLogoutConfirmation');
+});
+
 // Logout Confirmation Route
 app.get('/googleLogout', (req, res) => {
     res.render('googleLogout');
@@ -212,7 +220,7 @@ app.get('/error', (req, res) => {
 // POST routes
 
 app.post('/posts', async (req, res) => {
-    // TODO: Add a new post and redirect to home
+    // Add a new post and redirect to home
     const title = req.body.title;
     const content = req.body.content;
     const user = await getCurrentUser(req);
@@ -226,15 +234,15 @@ app.post('/posts', async (req, res) => {
 
 });
 app.post('/like/:id', async (req, res) => {
-    // TODO: Update post likes
+    // Update post likes
     await updatePostLikes(req, res);
 });
 app.get('/profile', isAuthenticated, async (req, res) => {
-    // TODO: Render profile page
+    // Render profile page
     await renderProfile(req, res);
 });
 app.get('/avatar/:username', (req, res) => {
-    // TODO: Serve the avatar image for the user
+    // Serve the avatar image for the user
     handleAvatar(req, res);
 });
 
@@ -249,7 +257,7 @@ app.get('/logout', (req, res) => {
 });
 
 app.post('/delete/:id', isAuthenticated, async (req, res) => {
-    // TODO: Delete a post if the current user is the owner
+    // Delete a post if the current user is the owner
     const postId = req.params.id;
     const user = await getCurrentUser(req);
     const db = await getDB();
@@ -321,44 +329,6 @@ async function registerUsername(req, res) {
     }
 }
 
-// Function to register a user
-async function registerUser(req, res) {
-    // Register a new user and redirect appropriately
-    const username = req.body.username;
-    const password = req.body.password;
-    const db = await getDB();
-    console.log("attempting to register a user: ", username);
-
-    try {
-        const avatar_url = saveAvatar(username);
-        await db.run(
-            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
-            [username, password, avatar_url, new Date().toISOString()]
-        );
-        res.redirect('/login');
-    } catch (error) {
-        res.redirect('/register?error=Username already exists');
-    }
-}
-
-// Function to login a user
-async function loginUser(req, res) {
-    // Login a user and redirect appropriately
-    const db = await getDB();
-    const username = req.body.username;
-    const password = req.body.password;
-
-    const user = await db.get('SELECT * FROM users WHERE username = ? AND hashedGoogleId = ?', [username, password]);
-    if (user) {
-        req.session.userId = user.id;
-        req.session.loggedIn = true;
-        res.redirect('/');
-    }
-    else {
-        res.redirect('/login?error=Invalid username or password. Try again');
-    }
-}
-
 // Function to logout a user
 function logoutUser(req, res) {
     // Destroy session and redirect appropriately
@@ -424,7 +394,7 @@ async function updatePostLikes(req, res) {
 
 // Function to handle avatar generation and serving
 function handleAvatar(req, res) {
-    // TODO: Generate and serve the user's avatar image
+    // Generate and serve the user's avatar image
     const username = req.params.username;
     const letter = username.charAt(0).toUpperCase();
     const avatarBuffer = generateAvatar(letter);
@@ -434,7 +404,7 @@ function handleAvatar(req, res) {
 
 // Function to get the current user from session
 async function getCurrentUser(req) {
-    // TODO: Return the user object if the session user ID matches
+    // Return the user object if the session user ID matches
     const db = await getDB();
     userID = req.session.userId;
     if (userID !== undefined) {
@@ -445,9 +415,9 @@ async function getCurrentUser(req) {
     }
 }
 
-// Function to add a new post
+// Function to add a new post to the database
 async function addPost(title, content, user) {
-    // TODO: Create a new post object and add to posts array
+    // Create a new post and insert it into the database
     const db = await getDB();
     const timestamp = new Date().toLocaleString();
     const avatar_url = user.avatar_url;
@@ -461,8 +431,7 @@ async function addPost(title, content, user) {
 // functions to generate an avatar image
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 function generateAvatar(letter, width = 100, height = 100) {
-    // TODO: Generate an avatar image with a letter
-    // Steps:
+    // Steps to generate an avatar image with a letter:
     // 1. Choose a color scheme based on the letter
     const backgroundColor = getRandomColor();
     // 2. Create a canvas with the specified width and height

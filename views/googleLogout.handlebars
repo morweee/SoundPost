@@ -3,16 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Logged Out</title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>Logging Out</title>
+    <script>
+        window.onload = function() {
+            const iframe = document.createElement('iframe');
+            iframe.style.display = 'none';
+            iframe.src = 'https://accounts.google.com/logout';
+            iframe.onload = function() {
+                window.location.href = '/logoutCallback';
+            };
+            document.body.appendChild(iframe);
+        };
+    </script>
 </head>
 <body>
-    <main>
-        <section class="logout-container">
-            <h2>You have been logged out</h2>
-            <p>Thank you for visiting. You have been successfully logged out.</p>
-            <a href="/login" class="login-button">Login Again</a>
-        </section>
-    </main>
+    <p>Logging out...</p>
 </body>
 </html>
