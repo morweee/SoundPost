@@ -118,7 +118,7 @@ app.use(
 // should be used in your template files. 
 // 
 app.use((req, res, next) => {
-    res.locals.appName = 'MicroBlog';
+    res.locals.appName = 'iBlog';
     res.locals.copyrightYear = 2024;
     res.locals.postNeoType = 'Post';
     res.locals.loggedIn = req.session.loggedIn || false;
@@ -327,7 +327,7 @@ async function registerUsername(req, res) {
         const avatar_path = saveAvatar(username);
         await db.run(
             'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
-            [username, hashedGoogleId, avatar_path, new Date().toISOString()]
+            [username, hashedGoogleId, avatar_path, new Date().toLocaleString()]
         );
         const user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
         req.session.userId = user.id;

@@ -20,7 +20,7 @@
                     <i class="fas fa-trash-alt"></i>
                 </button>
             {{else}}
-                <button class="like-button" data-id="{{id}}" onclick="handleLikeClick(event)">
+                <button class="like-button {{#if liked}}liked{{/if}}" data-id="{{id}}" onclick="handleLikeClick(event)">
                     ♥
                 </button>
             {{/ifCond}}
@@ -30,6 +30,7 @@
 
 <script>
     async function handleLikeClick(event) {
+        const button = event.target;
         const postId = event.target.getAttribute('data-id');
         // Fetch request to like/unlike the post
         const response = await fetch(`/like/${postId}`, {
@@ -41,6 +42,8 @@
             const postElement = event.target.closest('.post');
             const likesElement = postElement.querySelector('.post-likes');
             likesElement.textContent = `Likes: ${data.likes}`;
+            // Toggle the liked state class
+            button.classList.toggle('liked', data.liked);
         }
     }
 

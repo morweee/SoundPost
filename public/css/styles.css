@@ -201,9 +201,9 @@ button {
     justify-content: center;
 }
 
-button:hover {
+/* button:hover {
     background-color: #555;
-}
+} */
 
 /* styles for the Sort Posts (dropdown menu) */
 .sort-posts {
@@ -386,11 +386,15 @@ button:hover {
     font-size: 16px;
     color: #777;
     margin-left: 0;
+    transition: color 0.5s ease;
 }
 
-.like-button:hover,
-.delete-button:hover {
-    color: #333;
+.like-button.liked {
+    color: red;
+}
+
+.like-button:hover, .delete-button:hover {
+    color: darkgrey;
 }
 
 .delete-button i {
