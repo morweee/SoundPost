@@ -204,23 +204,17 @@ app.get('/googleLogout', (req, res) => {
 app.get('/', async (req, res) => {
     const db = await getDB();
     const user = await getCurrentUser(req) || {};
-    let posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
+    // default: render posts ordered by timestamp
+    let posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC')
     const sortOption = req.query.sort;
 
+    // sort posts by likes if the sort query parameter is set to 'likes'
     if (sortOption === 'likes') {
         posts = await db.all('SELECT * FROM posts ORDER BY likes DESC');
     } else {
         posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
     }
-    res.render('home', { 
-        posts, 
-        user, 
-        accessToken, 
-        sortRecent: sortOption === 'recent', 
-        sortLikes: sortOption === 'likes', 
-        spotifyClientId, 
-        spotifyClientSecret 
-    });
+    res.render('home', { posts, user, accessToken, sortRecent: sortOption === 'recent', sortLikes: sortOption === 'likes', spotifyClientId, spotifyClientSecret });
 });
 
 // Username Registration Route
@@ -246,10 +240,11 @@ app.post('/posts', async (req, res) => {
     // Add a new post and redirect to home
     const title = req.body.title;
     const content = req.body.content;
+    const album = req.body.album ? JSON.parse(req.body.album) : null; 
     const user = await getCurrentUser(req);
     
     if (user) {
-        await addPost(title, content, user);
+        await addPost(title, content, user, album);
         res.redirect('/');
     } else {
         res.redirect('/login');
@@ -439,11 +434,12 @@ async function getCurrentUser(req) {
 }
 
 // Function to add a new post to the database
-async function addPost(title, content, user) {
+async function addPost(title, content, user, album) {
     // Create a new post and insert it into the database
     const db = await getDB();
     const timestamp = new Date().toLocaleString();
     const avatar_url = user.avatar_url;
+
     await db.run(
         'INSERT INTO posts (title, content, username, timestamp, avatar_url, likes, album) VALUES (?, ?, ?, ?, ?, ?, ?)',
         [title, content, user.username, timestamp, avatar_url, 0, album ? JSON.stringify(album) : null]

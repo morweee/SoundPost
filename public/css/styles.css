@@ -201,10 +201,6 @@ button {
     justify-content: center;
 }
 
-/* button:hover {
-    background-color: #555;
-} */
-
 /* styles for the Sort Posts (dropdown menu) */
 .sort-posts {
     display: flex;
@@ -260,31 +256,54 @@ button {
     width: 60%;
 }
 
+/* buttons in form-actions (album, emoji, and post) styles */
 .form-actions {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-top: 20px;
+    max-width: calc(100% - 20px);
+}
+
+.form-actions button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+
+.left-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.right-button {
+    margin-left: auto;
+}
+
+.form-actions button:hover {
+    background-color: #ddd;
+    transform: scale(1.05);
+}
+
+.album-search {
+    background-color: #555;
+    color: white;
 }
 
 .emoji-button {
+    background-color: lightgoldenrodyellow;
+    color: white;
     font-size: 24px;
-    cursor: pointer;
-    background: none;
-    border: none;
+    line-height: 24px;
 }
 
 .post-button {
-    padding: 10px 20px;
     background-color: #28a745;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.post-button:hover {
-    background-color: #218838;
+    color: white;
 }
 
 /* album search result styles */
@@ -329,7 +348,48 @@ button {
     color: #666;
 }
 
+.new-post-form {
+    display: flex;
+    justify-content: space-between;
+}
 
+.form-left {
+    flex: 2;
+}
+
+.form-right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+#content {
+    height: 100px; /* Adjust height as needed */
+}
+
+.selected-album img {
+    width: 100%;
+    max-width: 200px; /* Adjust as needed */
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    
+}
+
+.selected-album h3, .selected-album p {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+    text-align: center;
+}
+
+.selected-album p {
+    color: #666;
+}
+
+/* emoji panel styles */
 .emoji-panel {
     margin-top: 10px;
     background-color: #fff;
