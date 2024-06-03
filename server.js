@@ -17,6 +17,10 @@ const { google } = require('googleapis');
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcryptjs');
 
+// Spotify API
+const querystring = require('querystring');
+const fetch = require('node-fetch');
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -29,6 +33,8 @@ require('dotenv').config();
 const accessToken = process.env.EMOJI_API_KEY;
 const CLIENT_ID = process.env.CLIENT_ID;
 const CLIENT_SECRET = process.env.CLIENT_SECRET;
+const spotifyClientId = process.env.SPOTIFY_CLIENT_ID;
+const spotifyClientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 
 // Create Google OAuth 2.0 client and redirect URI
 const REDIRECT_URI = 'http://localhost:3000/auth/google/callback';
@@ -198,17 +204,23 @@ app.get('/googleLogout', (req, res) => {
 app.get('/', async (req, res) => {
     const db = await getDB();
     const user = await getCurrentUser(req) || {};
-    // default: render posts ordered by timestamp
-    let posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC')
+    let posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
     const sortOption = req.query.sort;
 
-    // sort posts by likes if the sort query parameter is set to 'likes'
     if (sortOption === 'likes') {
         posts = await db.all('SELECT * FROM posts ORDER BY likes DESC');
     } else {
         posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
     }
-    res.render('home', { posts, user, accessToken, sortRecent: sortOption === 'recent', sortLikes: sortOption === 'likes' });
+    res.render('home', { 
+        posts, 
+        user, 
+        accessToken, 
+        sortRecent: sortOption === 'recent', 
+        sortLikes: sortOption === 'likes', 
+        spotifyClientId, 
+        spotifyClientSecret 
+    });
 });
 
 // Username Registration Route
@@ -433,8 +445,8 @@ async function addPost(title, content, user) {
     const timestamp = new Date().toLocaleString();
     const avatar_url = user.avatar_url;
     await db.run(
-        'INSERT INTO posts (title, content, username, timestamp, avatar_url, likes) VALUES (?, ?, ?, ?, ?, ?)',
-        [title, content, user.username, timestamp, avatar_url, 0]
+        'INSERT INTO posts (title, content, username, timestamp, avatar_url, likes, album) VALUES (?, ?, ?, ?, ?, ?, ?)',
+        [title, content, user.username, timestamp, avatar_url, 0, album ? JSON.stringify(album) : null]
     );
 }
 

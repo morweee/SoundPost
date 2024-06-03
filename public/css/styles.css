@@ -287,6 +287,49 @@ button {
     background-color: #218838;
 }
 
+/* album search result styles */
+.album-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    margin-top: 20px;
+}
+
+.album-item {
+    flex: 1 1 calc(25% - 20px);
+    max-width: calc(25% - 20px);
+    box-sizing: border-box;
+    text-align: center;
+    background: #f9f9f9;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
+}
+
+.album-item:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
+
+.album-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 5px;
+    margin-bottom: 10px;
+}
+
+.album-item h3, .album-item p {
+    margin: 5px 0 0 0;
+    font-size: 14px;
+}
+
+.album-item p {
+    color: #666;
+}
+
+
 .emoji-panel {
     margin-top: 10px;
     background-color: #fff;
@@ -297,7 +340,7 @@ button {
 }
 
 .emoji-panel input {
-    width: 100%;
+    width: 95%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;

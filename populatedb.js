@@ -22,7 +22,8 @@ async function initializeDB() {
             username TEXT NOT NULL,
             timestamp DATETIME NOT NULL,
             likes INTEGER NOT NULL,
-            avatar_url TEXT NOT NULL
+            avatar_url TEXT NOT NULL,
+            album TEXT
         );
 
         CREATE TABLE IF NOT EXISTS post_likes (
@@ -66,8 +67,8 @@ async function initializeDB() {
 
     await Promise.all(posts.map(post => {
         return db.run(
-            'INSERT INTO posts (title, content, username, timestamp, likes, avatar_url) VALUES (?, ?, ?, ?, ?, ?)',
-            [post.title, post.content, post.username, post.timestamp, post.likes, post.avatar_url]
+            'INSERT INTO posts (title, content, username, timestamp, likes, avatar_url, album) VALUES (?, ?, ?, ?, ?, ?, ?)',
+            [post.title, post.content, post.username, post.timestamp, post.likes, post.avatar_url, post.album]
         );
     }));
 

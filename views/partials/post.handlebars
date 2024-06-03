@@ -9,6 +9,13 @@
         <div class="post-header">
             <h3>{{title}}</h3>
             <p>{{content}}</p>
+            {{#if album}}
+                <div class="album-info">
+                    <img src="{{album.images.[0].url}}" alt="{{album.name}}" />
+                    <h3>{{album.name}}</h3>
+                    <p>{{album.artists.[0].name}}</p>
+                </div>
+            {{/if}}
         </div>
         <div class="post-status-bar">
             <!-- everything that is shown in the status bar -->
