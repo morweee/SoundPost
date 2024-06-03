@@ -533,6 +533,7 @@ button {
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
+    width: calc(100% - 270px);
 }
 
 .post-header {
