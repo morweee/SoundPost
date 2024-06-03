@@ -17,10 +17,6 @@ const { google } = require('googleapis');
 const { OAuth2Client } = require('google-auth-library');
 const bcrypt = require('bcryptjs');
 
-// Spotify API
-const querystring = require('querystring');
-const fetch = require('node-fetch');
-
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 // Configuration and Setup
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~

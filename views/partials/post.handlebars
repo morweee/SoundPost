@@ -13,23 +13,26 @@
     <div class="post-content-wrapper">
         <div class="post-content preserve-newlines">
             <div class="post-header">
+                <span class="post-author">{{username}}</span>
                 <h3>{{title}}</h3>
                 <p>{{content}}</p>
             </div>
         </div>
         <div class="post-status-bar">
-            <span class="post-author">{{username}}</span>
-            <span class="post-timestamp">{{timestamp}}</span>
-            <span class="post-likes">Likes: {{likes}}</span>
-            {{#ifCond username user.username}}
-                <button class="delete-button" data-id="{{id}}" onclick="handleDeleteClick(event)">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            {{else}}
-                <button class="like-button {{#if liked}}liked{{/if}}" data-id="{{id}}" onclick="handleLikeClick(event)">
-                    ♥
-                </button>
-            {{/ifCond}}
+            <div class="post-timestamp-likes"></div>
+                <span class="post-timestamp">{{timestamp}}</span>
+                <span class="post-likes">Likes: {{likes}}</span>
+            
+                {{#ifCond username user.username}}
+                    <button class="delete-button" data-id="{{id}}" onclick="handleDeleteClick(event)">
+                        <i class="fas fa-trash-alt"></i>
+                    </button>
+                {{else}}
+                    <button class="like-button {{#if liked}}liked{{/if}}" data-id="{{id}}" onclick="handleLikeClick(event)">
+                        ♥
+                    </button>
+                {{/ifCond}}
+            </div>
         </div>
     </div>
 </div>

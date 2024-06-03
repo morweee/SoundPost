@@ -474,7 +474,7 @@ button {
 }
 
 .post-header h3 {
-    margin: 0 0 5px 0;
+    margin: 8px 0 5px 0;
 }
 
 .post-header p {
@@ -483,12 +483,24 @@ button {
     line-height: 1.5;
 }
 
+.post-timestamp {
+    margin-right: 5px;
+}
+
+.post-timestamp-likes {
+    display: flex;
+    align-items: center;
+    margin-left: auto; 
+    font-size: 14px;
+    color: #777;
+}
+
 .post-status-bar {
     margin-top: 10px;
     display: flex;
     align-items: center;
-    justify-content: space-between;
     gap: 20px;
+    flex-wrap: nowrap;
 }
 
 .post-author,
@@ -534,10 +546,7 @@ button {
     justify-content: space-between;
     flex-grow: 1;
     width: calc(100% - 270px);
-}
-
-.post-header {
-    margin-bottom: auto; 
+    margin-right: 20px;
 }
 
 /* Profile Page Styles */
