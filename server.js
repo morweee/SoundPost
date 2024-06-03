@@ -214,7 +214,22 @@ app.get('/', async (req, res) => {
     } else {
         posts = await db.all('SELECT * FROM posts ORDER BY timestamp DESC');
     }
-    res.render('home', { posts, user, accessToken, sortRecent: sortOption === 'recent', sortLikes: sortOption === 'likes', spotifyClientId, spotifyClientSecret });
+
+     // Parse the album data for each post
+     posts = posts.map(post => ({
+        ...post,
+        album: post.album ? JSON.parse(post.album) : null
+    }));
+
+    res.render('home', { 
+        posts, 
+        user, 
+        accessToken, 
+        sortRecent: sortOption === 'recent', 
+        sortLikes: sortOption === 'likes', 
+        spotifyClientId, 
+        spotifyClientSecret,
+     });
 });
 
 // Username Registration Route

@@ -1,24 +1,23 @@
 {{! Partial for a single post }}
 <div class="post">
+    {{#if album}}
+        <div class="album-info">
+            <img src="{{album.images.[0].url}}" alt="{{album.name}}" />
+            <h3>{{album.name}}</h3>
+            <p>{{album.artists.[0].name}}</p>
+        </div>
+    {{/if}}
     <div class="post-avatar">
-        <!-- the user's avatar -->
         <img src="{{avatar_url}}" alt="User Avatar">
     </div>
-    <div class="post-content preserve-newlines">
-        <!-- the post -->
-        <div class="post-header">
-            <h3>{{title}}</h3>
-            <p>{{content}}</p>
-            {{#if album}}
-                <div class="album-info">
-                    <img src="{{album.images.[0].url}}" alt="{{album.name}}" />
-                    <h3>{{album.name}}</h3>
-                    <p>{{album.artists.[0].name}}</p>
-                </div>
-            {{/if}}
+    <div class="post-content-wrapper">
+        <div class="post-content preserve-newlines">
+            <div class="post-header">
+                <h3>{{title}}</h3>
+                <p>{{content}}</p>
+            </div>
         </div>
         <div class="post-status-bar">
-            <!-- everything that is shown in the status bar -->
             <span class="post-author">{{username}}</span>
             <span class="post-timestamp">{{timestamp}}</span>
             <span class="post-likes">Likes: {{likes}}</span>
@@ -31,9 +30,10 @@
                     ♥
                 </button>
             {{/ifCond}}
-        </div>        
+        </div>
     </div>
 </div>
+
 
 <script>
     async function handleLikeClick(event) {

@@ -262,7 +262,7 @@ button {
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
-    max-width: calc(100% - 20px);
+    max-width: calc(100% - 160px);
 }
 
 .form-actions button {
@@ -400,7 +400,7 @@ button {
 }
 
 .emoji-panel input {
-    width: 95%;
+    width: 98%;
     padding: 10px;
     margin-bottom: 10px;
     border: 1px solid #ccc;
@@ -420,6 +420,27 @@ button {
 }
 
 /* Post Styles */
+.album-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+    word-wrap: break-word; 
+    text-align: center; 
+    margin-right: 20px;
+}
+
+.album-info img {
+    width: 40%;
+    height: auto;
+    max-height: 300px;
+    border-radius: 10px;
+}
+
+.album-info h3 {
+    margin: 10px 0 0 0;
+}
+
 .posts-list {
     background-color: #fff;
     padding: 20px;
@@ -431,7 +452,9 @@ button {
     border-bottom: 1px solid #eee;
     padding: 20px 0;
     display: flex;
-    align-items: center;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
 }
 
 .post:last-child {
@@ -442,11 +465,12 @@ button {
     width: 50px;
     height: 50px;
     border-radius: 50%;
-    margin-right: 10px;
+    margin-right: 25px;
 }
 
 .post-content {
     flex-grow: 1;
+
 }
 
 .post-header h3 {
@@ -502,6 +526,17 @@ button {
 
 .delete-button i {
     font-size: 18px;
+}
+
+.post-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
+
+.post-header {
+    margin-bottom: auto; 
 }
 
 /* Profile Page Styles */
