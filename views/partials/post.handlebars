@@ -22,7 +22,6 @@
             <div class="post-timestamp-likes"></div>
                 <span class="post-timestamp">{{timestamp}}</span>
                 <span class="post-likes">Likes: {{likes}}</span>
-            
                 {{#ifCond username user.username}}
                     <button class="delete-button" data-id="{{id}}" onclick="handleDeleteClick(event)">
                         <i class="fas fa-trash-alt"></i>
