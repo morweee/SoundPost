@@ -164,11 +164,11 @@ app.get('/auth/google/callback', async (req, res) => {
 
     const userinfo = await oauth2.userinfo.get();
     const googleId = userinfo.data.id;
-    const hashedGoogleId = await bcrypt.hash(googleId, 10);
+    // const hashedGoogleId = await bcrypt.hash(googleId, 10);
     const db = await getDB();
 
     // check if user exists in the database
-    let user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
+    let user = await db.get('SELECT * FROM users WHERE googleId = ?', [googleId]);
 
     if (user) {
         // User exists: set session and redirect to home
@@ -176,8 +176,8 @@ app.get('/auth/google/callback', async (req, res) => {
         req.session.loggedIn = true;
         res.redirect('/');
     } else {
-        // user does not exist: store hashed Google ID in session and redirect to username registration
-        req.session.hashedGoogleId = hashedGoogleId;
+        // user does not exist: store Google ID in session and redirect to username registration
+        req.session.googleId = googleId;
         req.session.tokens = tokens;
         res.redirect('/registerUsername');
     }
@@ -350,7 +350,7 @@ function isAuthenticated(req, res, next) {
 async function registerUsername(req, res) {
     const db = await getDB();
     const username = req.body.username;
-    const hashedGoogleId = req.session.hashedGoogleId;
+    const googleId = req.session.googleId;
 
     try {
         // check if the username already exists
@@ -360,12 +360,12 @@ async function registerUsername(req, res) {
             return res.render('registerUsername', { error: 'Username already exists' });
         }
         const avatar_path = saveAvatar(username);
-        console.log('Saving user:', { username, hashedGoogleId, avatar_path, memberSince: new Date().toLocaleString() });
+        console.log('Saving user:', { username, googleId, avatar_path, memberSince: new Date().toLocaleString() });
         await db.run(
-            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince, description) VALUES (?, ?, ?, ?, ?)',
-            [username, hashedGoogleId, avatar_path, new Date().toLocaleString(), '']
+            'INSERT INTO users (username, googleId, avatar_url, memberSince, description) VALUES (?, ?, ?, ?, ?)',
+            [username, googleId, avatar_path, new Date().toLocaleString(), '']
         );
-        const user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
+        const user = await db.get('SELECT * FROM users WHERE googleId = ?', [googleId]);
         req.session.userId = user.id;
         req.session.loggedIn = true;
         res.redirect('/');

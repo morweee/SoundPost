@@ -11,9 +11,11 @@
         <!-- Display user profile info -->
         <h2>{{user.username}}</h2>
         <p>Member since: {{user.memberSince}}</p>
+        <div id="border-line"></div>
         {{#if user.description}}
             <div id="description-container">
-                <p>About Me: {{user.description}}</p>
+                <p>About Me</p>
+                <p id="usr_description">{{user.description}}</p>
                 <button id="edit-description-button" onclick="toggleEditDescription()">Edit</button>
             </div>
             <form id="description-form" method="POST" action="/profile/description">
@@ -23,7 +25,7 @@
             </form>
         {{else}}
             <form id="description-form" method="POST" action="/profile/description" style="display:flex;">
-                <label for="description">Describe your music taste, or anything about you!:</label>
+                <label for="description">Describe your music taste, or anything about you!</label>
                 <textarea id="description" name="description" rows="4" cols="50"></textarea>
                 <button type="submit">Save</button>
             </form>
