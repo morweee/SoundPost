@@ -11,6 +11,23 @@
         <!-- Display user profile info -->
         <h2>{{user.username}}</h2>
         <p>Member since: {{user.memberSince}}</p>
+        {{#if user.description}}
+            <div id="description-container">
+                <p>About Me: {{user.description}}</p>
+                <button id="edit-description-button" onclick="toggleEditDescription()">Edit</button>
+            </div>
+            <form id="description-form" method="POST" action="/profile/description">
+                <label for="description">Describe your music taste, or anything about you!:</label>
+                <textarea id="description" name="description" rows="4" cols="50">{{user.description}}</textarea>
+                <button type="submit">Save</button>
+            </form>
+        {{else}}
+            <form id="description-form" method="POST" action="/profile/description" style="display:flex;">
+                <label for="description">Describe your music taste, or anything about you!:</label>
+                <textarea id="description" name="description" rows="4" cols="50"></textarea>
+                <button type="submit">Save</button>
+            </form>
+        {{/if}}
     </section>
 </div>
 
@@ -30,6 +47,19 @@
 </section>
 
 <script>
+    function toggleEditDescription() {
+        const descriptionContainer = document.getElementById('description-container');
+        const descriptionForm = document.getElementById('description-form');
+        
+        if (descriptionContainer.style.display === 'none') {
+            descriptionContainer.style.display = 'block';
+            descriptionForm.style.display = 'none';
+        } else {
+            descriptionContainer.style.display = 'none';
+            descriptionForm.style.display = 'flex';
+        }
+    }
+
     // Handlebars helper for formatting the date
     Handlebars.registerHelper('formatDate', function(date) {
         const options = { year: 'numeric', month: 'long', day: 'numeric' };

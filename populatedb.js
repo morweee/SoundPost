@@ -12,7 +12,8 @@ async function initializeDB() {
             username TEXT NOT NULL UNIQUE,
             hashedGoogleId TEXT NOT NULL UNIQUE,
             avatar_url TEXT,
-            memberSince DATETIME NOT NULL
+            memberSince DATETIME NOT NULL,
+            description TEXT NOT NULL
         );
 
         CREATE TABLE IF NOT EXISTS posts (
@@ -37,8 +38,8 @@ async function initializeDB() {
 
     // Sample data - Replace these arrays with your own data
     const users = [
-        { username: 'WanderlustJane', hashedGoogleId: 'hashedGoogleId1', avatar_url: '/avatars/w.png', memberSince: '5/20/2024, 09:00:00 AM' },
-        { username: 'GlobetrotterTom', hashedGoogleId: 'hashedGoogleId2', avatar_url: '/avatars/g.png', memberSince: '5/21/2024, 10:30:00 AM' }
+        { username: 'WanderlustJane', hashedGoogleId: 'hashedGoogleId1', avatar_url: '/avatars/w.png', memberSince: '5/20/2024, 09:00:00 AM', description: 'Travel enthusiast and food lover'},
+        { username: 'GlobetrotterTom', hashedGoogleId: 'hashedGoogleId2', avatar_url: '/avatars/g.png', memberSince: '5/21/2024, 10:30:00 AM', description: 'Adventure seeker and nature lover'}
     ];
 
     const posts = [
@@ -60,8 +61,8 @@ async function initializeDB() {
     // Insert sample data into the database
     await Promise.all(users.map(user => {
         return db.run(
-            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
-            [user.username, user.hashedGoogleId, user.avatar_url, user.memberSince]
+            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince, description) VALUES (?, ?, ?, ?, ?)',
+            [user.username, user.hashedGoogleId, user.avatar_url, user.memberSince, user.description]
         );
     }));
 

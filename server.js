@@ -260,8 +260,22 @@ app.post('/posts', async (req, res) => {
     } else {
         res.redirect('/login');
     }
-
 });
+
+// Function to handle self-description form submission
+app.post('/profile/description', isAuthenticated, async (req, res) => {
+    const db = await getDB();
+    const user = await getCurrentUser(req);
+    const description = req.body.description;
+
+    if (user) {
+        await db.run("UPDATE users SET description = ? WHERE username = ?", [description, user.username]);
+        res.redirect('/profile');
+    } else {
+        res.redirect('/login');
+    }
+});
+
 app.post('/like/:id', async (req, res) => {
     // Update post likes
     await updatePostLikes(req, res);
@@ -342,12 +356,14 @@ async function registerUsername(req, res) {
         // check if the username already exists
         const existingUser = await db.get('SELECT * FROM users WHERE username = ?', [username]);
         if (existingUser) {
+            console.log('Username already exists:', username);
             return res.render('registerUsername', { error: 'Username already exists' });
         }
         const avatar_path = saveAvatar(username);
+        console.log('Saving user:', { username, hashedGoogleId, avatar_path, memberSince: new Date().toLocaleString() });
         await db.run(
-            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince) VALUES (?, ?, ?, ?)',
-            [username, hashedGoogleId, avatar_path, new Date().toLocaleString()]
+            'INSERT INTO users (username, hashedGoogleId, avatar_url, memberSince, description) VALUES (?, ?, ?, ?, ?)',
+            [username, hashedGoogleId, avatar_path, new Date().toLocaleString(), '']
         );
         const user = await db.get('SELECT * FROM users WHERE hashedGoogleId = ?', [hashedGoogleId]);
         req.session.userId = user.id;
