@@ -306,6 +306,37 @@ button {
     color: white;
 }
 
+/* Style for the album search container */
+.album-panel {
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#album-search-input {
+    padding: 8px 12px;
+    margin-right: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 14px;
+    width: 300px;
+}
+
+#album-search-button {
+    padding: 8px 16px;
+    background-color: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#album-search-button:hover {
+    background-color: #555;
+}
+
 /* album search result styles */
 .album-grid {
     display: flex;
