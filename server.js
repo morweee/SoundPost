@@ -377,8 +377,15 @@ async function renderProfile(req, res) {
     // Fetch user posts and render the profile page
     const db = await getDB();
     const user = await getCurrentUser(req);
+
     if (user) {
         const usr_posts = await db.all("SELECT * FROM posts WHERE username = ?", [user.username]);
+        // Parse the album field for each post
+        usr_posts.forEach(post => {
+            if (post.album) {
+                post.album = JSON.parse(post.album);
+            }
+        });
         console.log("user posts", usr_posts);
         res.render('profile', { user, usr_posts });
     } else {
