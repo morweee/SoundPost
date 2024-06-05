@@ -19,7 +19,7 @@
                 <button id="edit-description-button" onclick="toggleEditDescription()">Edit</button>
             </div>
             <form id="description-form" method="POST" action="/profile/description">
-                <label for="description">Describe your music taste, or anything about you!:</label>
+                <label for="description">Describe your music taste, or anything about you!</label>
                 <textarea id="description" name="description" rows="4" cols="50">{{user.description}}</textarea>
                 <button type="submit">Save</button>
             </form>

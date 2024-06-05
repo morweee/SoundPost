@@ -1,14 +1,12 @@
 * {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-
 body {
     margin: 0;
     padding: 0;
     background: linear-gradient(to right, #00008B, #800080);
     color: #333;
 }
-
 header {
     background-color: #333;
     color: #fff;
@@ -17,11 +15,9 @@ header {
     justify-content: space-between;
     align-items: center;
 }
-
 header .logo h1 {
     margin: 0;
 }
-
 header nav ul {
     list-style: none;
     margin: 0;
@@ -29,7 +25,6 @@ header nav ul {
     display: flex;
     align-items: center;
 }
-
 header nav ul li {
     margin-left: 20px;
 }
@@ -73,7 +68,7 @@ footer {
 }
 
 .login-box {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 40px;
     border-radius: 10px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -120,7 +115,7 @@ footer {
 }
 
 .register-username-area {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 40px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -179,6 +174,7 @@ footer {
 .form-group label {
     display: block;
     margin-bottom: 5px;
+    margin-right: 10px;
 }
 
 .form-group input, .form-group textarea {
@@ -247,7 +243,7 @@ button {
 }
 
 .post-form {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -260,6 +256,10 @@ button {
 
 .form-group input#title {
     width: 60%;
+}
+
+.form-group textarea#content {
+    width: calc(100% - 170px);
 }
 
 /* buttons in form-actions (album, emoji, and post) styles */
@@ -479,7 +479,7 @@ button {
 }
 
 .posts-list {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -589,7 +589,7 @@ button {
 
 /* Profile Page Styles */
 .profile-container {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -617,8 +617,10 @@ button {
 
 .profile-info #border-line {
     border-bottom: 1px solid #777;
-    margin: 20px 0 5px 0;
-    width: 1000px;
+    margin-top: 20px;
+    margin-bottom: 5px;
+    width: calc(60vw);
+    margin-right: 200px;
 }
 
 #description-container {
@@ -634,7 +636,8 @@ button {
 #description-form {
     display: none;
     flex-direction: column;
-    width: 1000px;
+    width: calc(60vw);
+    padding-right: 10px;
     margin-top: 20px;
     background-color: rgb(251, 249, 249);
     padding: 20px;
@@ -699,7 +702,7 @@ button {
 }
 
 .user-posts {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.8);
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -742,7 +745,7 @@ button {
 }
 
 .logout-container p {
-    margin-bottom: 20px;
+    margin: 0 20px 20px 20px;
     font-size: 18px;
     color: seashell;
 }
@@ -805,25 +808,6 @@ button {
         align-items: flex-start;
     }
 
-    .login-register {
-        flex-direction: column;
-        align-items: center;
-        margin-top: 30px;
-        margin-bottom: 40px;
-    }
-
-    .login-area,
-    .register-area {
-        width: 65%;
-        margin: 10px 0;
-    }
-
-    #seperate-label {
-        flex-direction: column;
-        align-items: center;
-        margin-top: 10px;
-    }
-
     .profile-container {
         flex-direction: column;
         align-items: flex-start;
@@ -836,4 +820,44 @@ button {
     .user-posts {
         padding: 10px;
     }
+
+    .album-info {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    .form-actions {
+        flex-direction: column;
+        align-items: flex-start;
+        max-width: 100%;
+    }
+
+    .left-buttons {
+        margin-bottom: 10px;
+    }
+
+    .album-item {
+        flex: 1 1 calc(50% - 20px);
+        max-width: calc(50% - 20px);
+    }
+
+    .new-post-form {
+        flex-direction: column;
+    }
+
+    .form-left,
+    .form-right {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .form-right {
+        flex-direction: row;
+    }
+
+    .post-content-wrapper {
+        width: 100%;
+        margin-right: 0;
+    }
+
 }
