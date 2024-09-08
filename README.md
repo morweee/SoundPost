@@ -1,1 +1,1 @@
-# Micro-Blog
+# SoundPost: Share your music tastes!
