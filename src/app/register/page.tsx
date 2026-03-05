@@ -40,7 +40,7 @@ export default function RegisterPage() {
     <div className="flex flex-col items-center justify-center min-h-[60vh]">
       <div className="bg-white border border-slate-200 shadow-md rounded-2xl p-8 w-full max-w-md">
         <h1 className="text-3xl font-bold text-slate-900 mb-2">Choose a Username</h1>
-        <p className="text-slate-500 mb-6">This will be your public identity on iBlog.</p>
+        <p className="text-slate-500 mb-6">This will be your public identity on SoundPost.</p>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="text"

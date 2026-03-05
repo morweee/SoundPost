@@ -11,7 +11,7 @@ export default function Header() {
     <header className="bg-white border-b border-slate-200">
       <div className="container mx-auto px-4 max-w-3xl flex items-center justify-between h-16">
         <Link href="/" className="text-slate-900 font-bold text-xl tracking-tight hover:opacity-80 transition-opacity">
-          iBlog
+          SoundPost
         </Link>
 
         <nav className="flex items-center gap-4">

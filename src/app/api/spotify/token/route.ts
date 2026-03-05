@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-dynamic";
+
 interface TokenCache {
   token: string;
   expiresAt: number;
@@ -28,6 +30,7 @@ export async function GET() {
       "Content-Type": "application/x-www-form-urlencoded",
     },
     body: "grant_type=client_credentials",
+    cache: "no-store",
   });
 
   if (!res.ok) {

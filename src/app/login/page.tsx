@@ -6,7 +6,7 @@ export default function LoginPage() {
   return (
     <div className="flex flex-col items-center justify-center min-h-[80vh]">
       <div className="bg-white border border-slate-200 shadow-md rounded-2xl p-10 text-center w-full max-w-sm">
-        <h1 className="text-3xl font-bold text-slate-900 mb-1">iBlog</h1>
+        <h1 className="text-3xl font-bold text-slate-900 mb-1">SoundPost</h1>
         <p className="text-slate-500 mb-8">Share your thoughts with the world</p>
         <button
           onClick={() => signIn("google", { callbackUrl: "/" })}

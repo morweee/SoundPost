@@ -4,8 +4,8 @@ import Providers from "@/components/Providers";
 import Header from "@/components/Header";
 
 export const metadata: Metadata = {
-  title: "iBlog",
-  description: "A micro-blog platform",
+  title: "SoundPost",
+  description: "A music-forward micro-blogging platform",
 };
 
 export default function RootLayout({

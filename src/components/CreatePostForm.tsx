@@ -97,13 +97,10 @@ export default function CreatePostForm() {
           <span className="absolute bottom-2 right-3 text-slate-400 text-xs">{content.length}/2000</span>
         </div>
 
-        {album && (
-          <AlbumSearch onSelect={setAlbum} selectedAlbum={album} />
-        )}
+        <AlbumSearch onSelect={setAlbum} selectedAlbum={album} />
 
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            {!album && <AlbumSearch onSelect={setAlbum} selectedAlbum={null} />}
             <EmojiPicker onSelect={insertEmoji} />
           </div>
           <button
