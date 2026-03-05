@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int              @id @default(autoincrement())
+  username       String           @unique
+  googleId       String           @unique
+  avatarUrl      String?
+  memberSince    DateTime         @default(now())
+  description    String           @default("")
+  spotifyPublic  Boolean          @default(false)
+  posts          Post[]
+  likes          PostLike[]
+  spotifyAccount SpotifyAccount?
+}
+
+model SpotifyAccount {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @unique
+  spotifyId    String
+  accessToken  String
+  refreshToken String
+  expiresAt    DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id        Int        @id @default(autoincrement())
+  title     String
+  content   String
+  username  String
+  timestamp DateTime   @default(now())
+  likes     Int        @default(0)
+  avatarUrl String
+  album     String?
+  author    User       @relation(fields: [username], references: [username])
+  postLikes PostLike[]
+}
+
+model PostLike {
+  postId Int
+  userId Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  user   User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([postId, userId])
+}
