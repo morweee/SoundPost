@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
+import Link from "next/link";
 import { PostWithLiked, SpotifyAlbum } from "@/types";
 
 interface PostCardProps {
@@ -59,7 +60,7 @@ export default function PostCard({ post, currentUsername }: PostCardProps) {
   return (
     <article className="bg-white border border-slate-200 shadow-sm rounded-2xl p-5">
       <div className="flex items-start justify-between gap-4">
-        <div className="flex items-center gap-3">
+        <Link href={`/user/${post.username}`} className="flex items-center gap-3 group">
           <Image
             src={post.avatarUrl || `/api/avatar/${post.username}`}
             alt={post.username}
@@ -69,10 +70,10 @@ export default function PostCard({ post, currentUsername }: PostCardProps) {
             unoptimized
           />
           <div>
-            <span className="font-semibold text-slate-900 text-sm">{post.username}</span>
+            <span className="font-semibold text-slate-900 text-sm group-hover:text-sky-600 transition-colors">{post.username}</span>
             <p className="text-slate-400 text-xs">{timestamp}</p>
           </div>
-        </div>
+        </Link>
       </div>
 
       <h2 className="text-slate-900 font-bold text-lg mt-3">{post.title}</h2>
