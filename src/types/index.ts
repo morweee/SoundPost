@@ -37,6 +37,23 @@ export interface SpotifyTrack {
   duration_ms: number;
 }
 
+export interface SnapshotArtist {
+  id: string;
+  name: string;
+  popularity: number;
+  genres: string[];
+  imageUrl: string | null;
+}
+
+export interface SnapshotTrack {
+  id: string;
+  name: string;
+  artistNames: string;
+  albumName: string;
+  albumImageUrl: string | null;
+  duration_ms: number;
+}
+
 declare module "next-auth" {
   interface Session {
     user: {

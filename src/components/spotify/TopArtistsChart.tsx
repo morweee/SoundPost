@@ -1,90 +1,81 @@
 "use client";
 
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  ResponsiveContainer,
-  Cell,
-} from "recharts";
+import Image from "next/image";
 import { SpotifyArtist } from "@/types";
 
 interface Props {
   artists: SpotifyArtist[];
+  globalArtistIds?: string[];
 }
 
-// Spotify returns /me/top/artists sorted by the user's personal listening
-// frequency. We keep that order (most-listened first) and use the artist's
-// global popularity score (0–100) to size the bars, giving a meaningful
-// visual weight.
-export default function TopArtistsChart({ artists }: Props) {
-  const data = artists.slice(0, 10).map((a, i) => ({
-    name: a.name.length > 18 ? a.name.slice(0, 16) + "…" : a.name,
-    score: a.popularity,
-    rank: i + 1,
-  }));
+export default function TopArtistsChart({ artists, globalArtistIds = [] }: Props) {
+  const globalSet = new Set(globalArtistIds);
+  const top = artists.slice(0, 10);
 
   return (
     <div className="bg-white border border-slate-200 rounded-2xl p-6">
       <h2 className="text-lg font-semibold text-slate-800 mb-1">Top Artists</h2>
-      <p className="text-xs text-slate-400 mb-4">
-        Ranked by your listening. Bar = global artist hotness (0–100).
-      </p>
-      <ResponsiveContainer width="100%" height={300}>
-        <BarChart
-          data={data}
-          layout="vertical"
-          margin={{ top: 0, right: 16, left: 0, bottom: 0 }}
-        >
-          <defs>
-            <linearGradient id="barGradient" x1="0" y1="0" x2="1" y2="0">
-              <stop offset="0%" stopColor="#6366f1" />
-              <stop offset="50%" stopColor="#8b5cf6" />
-              <stop offset="100%" stopColor="#a855f7" />
-            </linearGradient>
-          </defs>
-          <XAxis
-            type="number"
-            domain={[0, 100]}
-            tick={{ fontSize: 10, fill: "#94a3b8" }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <YAxis
-            type="category"
-            dataKey="name"
-            width={110}
-            tick={{ fontSize: 11 }}
-            axisLine={false}
-            tickLine={false}
-          />
-          <Tooltip
-            cursor={{ fill: "rgba(99,102,241,0.05)" }}
-            content={({ active, payload }) => {
-              if (!active || !payload?.[0]) return null;
-              const d = payload[0].payload as { name: string; score: number; rank: number };
-              return (
-                <div className="bg-white border border-slate-200 shadow-lg rounded-lg px-3 py-2 text-xs">
-                  <p className="font-medium text-slate-800">{d.name}</p>
-                  <p className="text-slate-500">#{d.rank} in your listening</p>
-                  <p className="text-slate-500">Hotness: {d.score}/100</p>
+      <p className="text-xs text-slate-400 mb-4">Ranked by your listening</p>
+      <ol className="space-y-3">
+        {top.map((artist, i) => {
+          const percentile = 100 - artist.popularity;
+          const isTrending = globalSet.has(artist.id);
+          const image = artist.images[artist.images.length - 1]?.url; // smallest image
+
+          return (
+            <li key={artist.id} className="flex items-center gap-3">
+              {/* Rank number */}
+              <span
+                className="text-lg font-bold w-7 text-right flex-shrink-0"
+                style={{
+                  color: `rgba(99, 102, 241, ${1 - i * 0.07})`,
+                }}
+              >
+                {i + 1}
+              </span>
+
+              {/* Artist image */}
+              {image ? (
+                <Image
+                  src={image}
+                  alt={artist.name}
+                  width={48}
+                  height={48}
+                  className="rounded-full flex-shrink-0 object-cover w-12 h-12"
+                  unoptimized
+                />
+              ) : (
+                <div className="w-12 h-12 bg-slate-100 rounded-full flex-shrink-0" />
+              )}
+
+              {/* Name + badges + progress bar */}
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2">
+                  <p className="text-sm font-medium text-slate-900 truncate">
+                    {artist.name}
+                  </p>
+                  {isTrending && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] font-semibold bg-orange-50 text-orange-600 border border-orange-200 rounded-full px-1.5 py-0.5 flex-shrink-0">
+                      🔥 Top 50
+                    </span>
+                  )}
                 </div>
-              );
-            }}
-          />
-          <Bar dataKey="score" radius={[0, 6, 6, 0]}>
-            {data.map((_, i) => (
-              <Cell
-                key={i}
-                fill="url(#barGradient)"
-                fillOpacity={1 - i * 0.06}
-              />
-            ))}
-          </Bar>
-        </BarChart>
-      </ResponsiveContainer>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <div className="flex-1 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-indigo-500 via-purple-500 to-fuchsia-500"
+                      style={{ width: `${artist.popularity}%` }}
+                    />
+                  </div>
+                  <span className="text-[10px] text-slate-400 flex-shrink-0">
+                    Top {percentile}%
+                  </span>
+                </div>
+              </div>
+            </li>
+          );
+        })}
+      </ol>
     </div>
   );
 }

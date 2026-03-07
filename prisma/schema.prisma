@@ -17,7 +17,8 @@ model User {
   spotifyPublic  Boolean          @default(false)
   posts          Post[]
   likes          PostLike[]
-  spotifyAccount SpotifyAccount?
+  spotifyAccount   SpotifyAccount?
+  monthlySnapshots MonthlySnapshot[]
 }
 
 model SpotifyAccount {
@@ -28,6 +29,18 @@ model SpotifyAccount {
   refreshToken String
   expiresAt    DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MonthlySnapshot {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  month     String   // "2026-03" (YYYY-MM)
+  artists   String   // JSON: SnapshotArtist[]
+  tracks    String   // JSON: SnapshotTrack[]
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month])
 }
 
 model Post {
