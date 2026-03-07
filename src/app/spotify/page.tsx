@@ -12,7 +12,9 @@ import GenrePieChart from "@/components/spotify/GenrePieChart";
 import TopTracksList from "@/components/spotify/TopTracksList";
 import MonthlyRewind from "@/components/spotify/MonthlyRewind";
 import { ensureCurrentMonthSnapshot } from "@/lib/monthly-snapshot";
+import { ensureCurrentWeekSnapshot } from "@/lib/weekly-snapshot";
 import { getGlobalTopArtistIds } from "@/lib/spotify-global";
+import ListeningAnalysis from "@/components/spotify/ListeningAnalysis";
 
 interface PageProps {
   searchParams: { range?: string };
@@ -66,6 +68,7 @@ export default async function SpotifyPage({ searchParams }: PageProps) {
     artists = artistsData.items ?? [];
     tracks = tracksData.items ?? [];
     try { await ensureCurrentMonthSnapshot(user.id); } catch {}
+    try { await ensureCurrentWeekSnapshot(user.id); } catch {}
   } catch {
     // Token issue — show reconnect prompt
     return (
@@ -99,6 +102,7 @@ export default async function SpotifyPage({ searchParams }: PageProps) {
             {artists.length > 0 && <TopArtistsChart artists={artists} globalArtistIds={Array.from(globalArtistIds)} />}
             {artists.length > 0 && <GenrePieChart artists={artists} />}
           </div>
+          <ListeningAnalysis />
           <MonthlyRewind />
           {tracks.length > 0 && <TopTracksList tracks={tracks} />}
         </>

@@ -19,6 +19,8 @@ model User {
   likes          PostLike[]
   spotifyAccount   SpotifyAccount?
   monthlySnapshots MonthlySnapshot[]
+  weeklySnapshots  WeeklySnapshot[]
+  aiAnalyses       AiAnalysis[]
 }
 
 model SpotifyAccount {
@@ -41,6 +43,30 @@ model MonthlySnapshot {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([userId, month])
+}
+
+model WeeklySnapshot {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  week      String   // "2026-W10"
+  artists   String   // JSON: SnapshotArtist[]
+  tracks    String   // JSON: SnapshotTrack[]
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, week])
+}
+
+model AiAnalysis {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  period    String   // "weekly" or "monthly"
+  key       String   // "2026-W10" or "2026-03"
+  content   String   // AI-generated text
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, period, key])
 }
 
 model Post {
