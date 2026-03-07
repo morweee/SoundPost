@@ -1,13 +1,22 @@
 # SoundPost
 
-A music-forward micro-blogging platform built with Next.js 14. Sign in with Google, share posts with Spotify album attachments, and connect your Spotify account to visualize your listening habits on a personal dashboard.
+A music-forward micro-blogging platform built with Next.js 14. Sign in with Google, share posts with Spotify album attachments, and connect your Spotify account for a full listening analytics dashboard — ranked artist breakdowns, genre distribution, weekly/monthly snapshots, and AI-powered taste analysis.
 
 ## Features
 
+### Spotify Listening Analytics
+- **Top Artists Ranking** — Your most-listened artists displayed with global popularity percentiles and "Global Top 50" trending badges (compared against Spotify's official worldwide chart)
+- **Genre Breakdown** — Interactive donut chart showing your genre distribution
+- **Top Tracks** — Your most-played tracks with album art and duration
+- **Time Range Filtering** — Switch between last 4 weeks, 6 months, or all time
+- **Monthly Rewind** — Automatic monthly snapshots of your listening data, browse and compare past months
+- **AI Taste Analysis** — Weekly and monthly listening summaries generated via Claude API, highlighting your vibe, standout picks, and genre patterns
+- **Public Spotify Summary** — Toggle a card on your profile showing your top 3 artists and top genre
+
+### Social & Blogging
 - **Post Feed** — Create, like, and delete short-form posts with rich text and emoji support
 - **Spotify Album Attachment** — Search and attach Spotify albums to posts
-- **Spotify Listening Dashboard** — Connect your Spotify account to visualize your top artists (bar chart), genre distribution (donut chart), and top tracks, with time-range filtering (4 weeks / 6 months / all time)
-- **Public Spotify Summary** — Toggle a summary card on your profile showing your top 3 artists and top genre
+- **Public User Profiles** — Visit any user's profile and see their posts and optional Spotify summary
 - **Google OAuth** — Sign in with Google; first-time users pick a unique username
 - **Auto-generated Avatars** — SVG avatars generated from usernames
 - **Editable Profile** — Bio/description with live save
@@ -20,8 +29,10 @@ A music-forward micro-blogging platform built with Next.js 14. Sign in with Goog
 | Language | TypeScript |
 | Styling | Tailwind CSS |
 | Database | SQLite via Prisma 5 |
-| Auth | NextAuth.js v4 (Google provider) |
+| Auth | NextAuth.js v4 (Google OAuth) |
 | Charts | Recharts |
+| AI | Claude API (Anthropic SDK) |
+| APIs | Spotify Web API (OAuth + Client Credentials) |
 | Validation | Zod |
 
 ## Prerequisites
@@ -54,6 +65,7 @@ Open `.env.local` and fill in your credentials:
 | `NEXTAUTH_SECRET` | Run `openssl rand -base64 32` |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | [Google Cloud Console](https://console.cloud.google.com/apis/credentials) — create an OAuth 2.0 Client ID (Web application) |
 | `SPOTIFY_CLIENT_ID` / `SPOTIFY_CLIENT_SECRET` | [Spotify Developer Dashboard](https://developer.spotify.com/dashboard) — create an app |
+| `ANTHROPIC_API_KEY` | *(Optional)* [Anthropic Console](https://console.anthropic.com) — enables AI listening analysis |
 | `EMOJI_API_KEY` | *(Optional)* [emoji-api.com](https://emoji-api.com) |
 
 ### 3. Set up OAuth redirect URIs
@@ -94,7 +106,7 @@ src/
 │   ├── api/
 │   │   ├── auth/          # NextAuth.js handler
 │   │   ├── posts/         # CRUD + likes
-│   │   ├── spotify/       # Connect, callback, top artists/tracks
+│   │   ├── spotify/       # Connect, callback, top data, AI analysis
 │   │   ├── avatar/        # SVG avatar generation
 │   │   ├── emoji/         # Emoji search proxy
 │   │   ├── profile/       # Bio update
@@ -112,6 +124,10 @@ src/
 │   ├── auth.ts            # NextAuth config
 │   ├── prisma.ts          # Prisma client singleton
 │   ├── spotify-user.ts    # Spotify token refresh + API helper
+│   ├── spotify-global.ts  # Global Top 50 trending data
+│   ├── monthly-snapshot.ts # Monthly listening snapshots
+│   ├── weekly-snapshot.ts  # Weekly listening snapshots
+│   ├── ai-analysis.ts     # Claude API integration
 │   └── validators.ts      # Zod schemas
 └── types/                 # TypeScript interfaces + NextAuth augmentation
 ```
